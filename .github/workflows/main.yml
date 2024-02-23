@@ -11,14 +11,14 @@ on:
 
 jobs:
   plan:
-    uses: ./templates/plan.yml@main
+    uses: ./.github/actions/plan.yml
     # with:
     #   username: Houssem
     # secrets:
     #   token: ${{ secrets.TOKEN }}
 
   apply:
-    uses: ./templates/apply.yml@main
+    uses: ./.github/actions/apply.yml
     #   username: Dellai
     # secrets:
     #   token: ${{ secrets.TOKEN }}
