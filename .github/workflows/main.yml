@@ -1,24 +1,51 @@
-name: MyTestPipeline
+name: Terraform Workflow
 
 on:
   push:
-    branches: none # [ main ]
+    branches: [ main ]
+    # paths:
+    # - '04-workload/*'
   pull_request:
-    branches: none # [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [ main ]
+    # paths:
+    # - '04-workload/*'
   workflow_dispatch:
+    # inputs:
+    #   environment:
+    #     description: 'Which Environment to deploy?'
+    #     required: true
+    #     default: 'prod'
+
+# env:
+#   ENVIRONMENT: ${{ github.event.inputs.environment }}
+#   SERVICE_CONNECTION_NAME: 'sp-terraform-wb-all-aue'
+#   SCOPE: '04-workload'
 
 jobs:
-  plan:
-    uses: jrampin/github-actions/.github/workflows/templates/plan.yml@main
-    # with:
-    #   username: Houssem
-    # secrets:
-    #   token: ${{ secrets.TOKEN }}
+  terraform_plan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-  apply:
-    uses: jrampin/github-actions/.github/workflows/templates/apply.yml@main
-    #   username: Dellai
-    # secrets:
-    #   token: ${{ secrets.TOKEN }}
+    - name: Terraform Plan
+      uses: ./.github/workflows/templates/plan.yml
+      # with:
+      #   env: ${{ env.ENVIRONMENT }}
+      #   ServiceConnectionName: ${{ env.SERVICE_CONNECTION_NAME }}
+      #   Scope: ${{ env.SCOPE }}
+
+  terraform_apply:
+    needs: terraform_plan
+    # if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Terraform Apply
+      uses: ./.github/workflows/templates/apply.yml
+      # with:
+      #   env: ${{ env.ENVIRONMENT }}
+      #   ServiceConnectionName: ${{ env.SERVICE_CONNECTION_NAME }}
+      #   Scope: ${{ env.SCOPE }}
