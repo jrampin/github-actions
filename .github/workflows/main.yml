@@ -11,14 +11,14 @@ on:
 
 jobs:
   plan:
-    uses: ./.github/actions/plan.yml@main
+    uses: jrampin/github-actions/.github/workflows/templates/plan.yml@main
     # with:
     #   username: Houssem
     # secrets:
     #   token: ${{ secrets.TOKEN }}
 
   apply:
-    uses: ./.github/actions/apply.yml@main
+    uses: jrampin/github-actions/.github/workflows/templates/apply.yml@main
     #   username: Dellai
     # secrets:
     #   token: ${{ secrets.TOKEN }}
