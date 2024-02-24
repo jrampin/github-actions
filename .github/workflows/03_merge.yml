@@ -8,6 +8,12 @@ on:
 env:
   TF_LOG: INFO
   TF_INPUT: false
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+  id-token: write
   
 jobs: 
   merge-main-apply:
