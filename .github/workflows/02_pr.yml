@@ -13,6 +13,7 @@ permissions:
   issues: write
   pull-requests: write
   contents: read
+  id-token: write
 
 jobs: 
   pr-infra-check:
