@@ -3,49 +3,64 @@ name: Terraform Workflow
 on:
   push:
     branches: [ main ]
-    # paths:
-    # - '04-workload/*'
-  pull_request:
-    branches: [ main ]
-    # paths:
-    # - '04-workload/*'
-  workflow_dispatch:
-    # inputs:
-    #   environment:
-    #     description: 'Which Environment to deploy?'
-    #     required: true
-    #     default: 'prod'
-
-# env:
-#   ENVIRONMENT: ${{ github.event.inputs.environment }}
-#   SERVICE_CONNECTION_NAME: 'sp-terraform-wb-all-aue'
-#   SCOPE: '04-workload'
 
 jobs:
-  terraform_plan:
+  terraform:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.7.0
+
+    - name: Terraform Init
+      run: terraform init
 
     - name: Terraform Plan
-      uses: ./.github/actions/plan
-      # with:
-      #   env: ${{ env.ENVIRONMENT }}
-      #   ServiceConnectionName: ${{ env.SERVICE_CONNECTION_NAME }}
-      #   Scope: ${{ env.SCOPE }}
+      run: terraform plan -out=tfplan
 
-  terraform_apply:
-    needs: terraform_plan
-    # if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Wait for approval
+      uses: actions/github-script@v3
+      with:
+        script: |
+          const { owner, repo } = context.repo
+          const check = await github.checks.create({
+            owner,
+            repo,
+            name: 'Manual Approval',
+            head_sha: context.sha,
+            status: 'in_progress',
+            output: {
+              title: 'Manual Approval',
+              summary: 'This workflow needs manual approval to continue. Click the "Details" link to approve or reject.'
+            },
+            actions: [{
+              label: 'Approve',
+              description: 'Approve this workflow to continue.',
+              identifier: 'approve'
+            }]
+          })
+          const check_run_id = check.data.id
+          while (true) {
+            const { data } = await github.checks.get({
+              owner,
+              repo,
+              check_run_id
+            })
+            if (data.status !== 'in_progress') {
+              if (data.conclusion === 'success') {
+                console.log('Workflow approved.')
+                break
+              } else {
+                console.log('Workflow rejected.')
+                process.exit(1)
+              }
+            }
+            await new Promise(resolve => setTimeout(resolve, 5000))
+          }
 
     - name: Terraform Apply
-      uses: ./.github/actions/apply
-      # with:
-      #   env: ${{ env.ENVIRONMENT }}
-      #   ServiceConnectionName: ${{ env.SERVICE_CONNECTION_NAME }}
-      #   Scope: ${{ env.SCOPE }}
+      run: terraform apply tfplan -auto-approve
