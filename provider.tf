@@ -1,11 +1,11 @@
-# terraform {
-#   required_providers {
-#     aws = {
-#       source  = "hashicorp/azurerm"
-#       version = "~> 3.93.0"
-#     }
-#   }
-# }
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.93.0"
+    }
+  }
+}
 
 provider "azurerm" {
   features {}
