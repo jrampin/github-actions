@@ -2,6 +2,15 @@ name: My Starter Workflow
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Specifies the GitHub deployment environment.'
+        required: true
+        type: choice
+        default: dev
+        options:
+          - dev
+          - prod
 
 # env:
 #   # TF_LOG: INFO
