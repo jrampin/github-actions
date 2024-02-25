@@ -11,7 +11,6 @@ env:
   RESOURCE_GROUP: 'rg-terraform'
   STORAGE_ACCOUNT: 'stterraformjr'
   CONTAINER_NAME: 'tfstate'
-  KEY: 'dev/terraform.state'
 
 permissions:
   issues: write
@@ -61,8 +60,7 @@ jobs:
         terraform init \
           -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
           -backend-config="container_name=$CONTAINER_NAME" \
-          -backend-config="resource_group_name=$RESOURCE_GROUP" \
-          -backend-config="key=$KEY"
+          -backend-config="resource_group_name=$RESOURCE_GROUP"
       # run: terraform init 
 
     # Run a terraform plan
