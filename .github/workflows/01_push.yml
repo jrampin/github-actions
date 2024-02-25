@@ -12,6 +12,7 @@ env:
   RESOURCE_GROUP: 'rg-terraform'
   STORAGE_ACCOUNT: 'stterraformjr'
   CONTAINER_NAME: 'tfstate'
+  KEY: 'dev/terraform.state'
 
 jobs: 
   check-code:
