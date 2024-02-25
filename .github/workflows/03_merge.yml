@@ -84,6 +84,7 @@ jobs:
         terraform plan \
           -var-file=environments/$environment.tfvars \
           -out=tfplan
+      continue-on-error: false
 
     # Run a terraform apply
     - name: Terraform Apply
