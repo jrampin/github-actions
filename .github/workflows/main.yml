@@ -19,11 +19,11 @@ on:
 #   STORAGE_ACCOUNT: 'stterraformjr'
 #   CONTAINER_NAME: 'tfstate'
 
-# permissions:
-#   issues: write
-#   pull-requests: write
-#   contents: read
-#   id-token: write
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+  id-token: write
 
 jobs:
   terraform-plan:
