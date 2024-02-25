@@ -57,7 +57,8 @@ jobs:
         terraform init \
           -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
           -backend-config="container_name=$CONTAINER_NAME" \
-          -backend-config="resource_group_name=$RESOURCE_GROUP"
+          -backend-config="resource_group_name=$RESOURCE_GROUP" \
+          -backend-config="key=$KEY"
       # run: terraform init
 
     # On merge to main apply changes
@@ -68,4 +69,7 @@ jobs:
         # ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      run: terraform apply -auto-approve tfplan
+      run: |
+        terraform apply \
+          -auto-approve \
+          tfplan
