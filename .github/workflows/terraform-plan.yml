@@ -10,6 +10,7 @@ on:
         description: 'Specifies the GitHub deployment environment.'
         required: true
         type: choice
+        default: dev
         options:
           - dev
           - prod
@@ -146,7 +147,8 @@ jobs:
     - name: Download Terraform Plan
       uses: actions/download-artifact@v3
       with:
-        name: tfplan  
+        name: tfplan 
+        path: tfplan 
 
     # Run a terraform apply
     - name: Terraform Apply
