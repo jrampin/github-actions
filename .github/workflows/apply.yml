@@ -33,6 +33,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Download saved plan from artifacts  
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+          path: tfplan
+      - run: zip -r tfplan.zip tfplan/
+
       # Install the selected version of Terraform CLI 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -65,11 +73,13 @@ jobs:
             -backend-config="resource_group_name=$RESOURCE_GROUP" \
             -backend-config="key=$environment/terraform.tfstate"
 
-      # Download saved plan from artifacts  
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v3
-        with:
-          name: tfplan
+      # # Download saved plan from artifacts  
+      # - name: Download Terraform Plan
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: tfplan
+      #     path: tfplan
+      # - run: zip -r tfplan.zip tfplan/
 
       # Run a terraform apply
       - name: Terraform Apply
