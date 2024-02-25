@@ -1,9 +1,16 @@
 name: Merge to Main branch
 
 on:
-  push:
-    branches:
-    - main
+  # push:
+  #   branches:
+  #   - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Specifies the GitHub deployment environment.'
+        required: false
+        type: string
+        default: dev
 
 env:
   # TF_LOG: INFO
@@ -19,8 +26,9 @@ permissions:
   id-token: write
   
 jobs: 
-  merge-main-apply:
+  terraform-plan-apply:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     # Set the working directory to vnet for the config files
     # defaults:
@@ -56,14 +64,28 @@ jobs:
         RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }}
         STORAGE_ACCOUNT: ${{ env.STORAGE_ACCOUNT }}
         CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
+        environment: ${{ inputs.environment }}
       run: |
         terraform init \
           -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
           -backend-config="container_name=$CONTAINER_NAME" \
-          -backend-config="resource_group_name=$RESOURCE_GROUP"
-      # run: terraform init
+          -backend-config="resource_group_name=$RESOURCE_GROUP" \
+          -backend-config="key=$environment/terraform.tfstate"
+    
+    # Run a terraform plan
+    - name: Terraform Plan
+      id: plan
+      env:
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        environment: ${{ inputs.environment }}
+      run: |
+        terraform plan \
+          -var-file=environments/$environment.tfvars \
+          -out=tfplan
 
-    # On merge to main apply changes
+    # Run a terraform apply
     - name: Terraform Apply
       id: apply
       env:
