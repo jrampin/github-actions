@@ -8,9 +8,11 @@ on:
     inputs:
       environment:
         description: 'Specifies the GitHub deployment environment.'
-        required: false
-        type: string
-        default: dev
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
 
 env:
   # TF_LOG: INFO
@@ -77,13 +79,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: tfplan
-    
-    # Save plan to artifacts  
-    - name: Publish Terraform Plan
-      uses: actions/upload-artifact@v3
-      with:
-        name: tfplan
-        path: tfplan
+  
 
     # Run a terraform apply
     - name: Terraform Apply
