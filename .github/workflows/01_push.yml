@@ -9,6 +9,9 @@ on:
 env:
   TF_LOG: INFO
   TF_INPUT: false
+  RESOURCE_GROUP: 'rg-terraform'
+  STORAGE_ACCOUNT: 'stterraformjr'
+  CONTAINER_NAME: 'tfstate'
 
 jobs: 
   check-code:
@@ -36,14 +39,17 @@ jobs:
       id: init
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-        # ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      #   RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
-      #   STORAGE_ACCOUNT: ${{ secrets.STORAGE_ACCOUNT }}
-      #   CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
-      # run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP"
-      run: terraform init 
+        RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }}
+        STORAGE_ACCOUNT: ${{ env.STORAGE_ACCOUNT }}
+        CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
+      run: |
+        terraform init \
+          -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
+          -backend-config="container_name=$CONTAINER_NAME" \
+          -backend-config="resource_group_name=$RESOURCE_GROUP"
+      # run: terraform init 
       
     # Run a terraform fmt to check syntax
     - name: Terraform Format
@@ -55,4 +61,4 @@ jobs:
       id: validate
       # Run even if formatting fails
       if: success() || failure()
-      run: terraform validate -no-color
+      run: terraform validate
