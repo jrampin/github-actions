@@ -8,6 +8,9 @@ on:
 env:
   # TF_LOG: INFO
   TF_INPUT: false
+  RESOURCE_GROUP: 'rg-terraform'
+  STORAGE_ACCOUNT: 'stterraformjr'
+  CONTAINER_NAME: 'tfstate'
 
 permissions:
   issues: write
