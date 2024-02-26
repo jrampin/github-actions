@@ -5,11 +5,13 @@ on:
     branches:
       - main
 
+  # This is used to indicate that a workflow 
+  # can be called by another workflow.
   workflow_call:
     inputs:
       environment:
         description: 'The environment to deploy to'
-        required: true
+        required: false
         type: string
     secrets:
       ARM_CLIENT_ID:
