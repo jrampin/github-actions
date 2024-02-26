@@ -1,22 +1,22 @@
 name: github-actions
 
 on:
-  # push:
-  #   branches:
-  #     - '*'
+  push:
+    branches:
+      - '*'
 
   # This is used to enable a workflow to be triggered manually.
   workflow_dispatch:
     inputs:
       environment:
         description: 'Specifies the GitHub deployment environment.'
-        required: true
+        required: false
         type: choice
         default: dev
         options:
           - dev
           - prod          
-  # pull_request:
+  pull_request:
 
 # env:
 #   # TF_LOG: INFO
@@ -35,7 +35,13 @@ jobs:
   terraform-plan:
     uses: ./.github/workflows/plan.yml
     with:
-      environment: ${{ github.event.inputs.environment }}
+      # environment: ${{ github.event.inputs.environment }}
+
+      environment: if [[ ${{ github.event_name == 'workflow_dispatch' }} == true ]]; then
+        environment=${{ github.event.inputs.environment }}; 
+        else 
+          environment=dev; 
+        fi
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
@@ -45,7 +51,12 @@ jobs:
     uses: ./.github/workflows/apply.yml
     needs: terraform-plan
     with:
-      environment: ${{ github.event.inputs.environment }}
+      # environment: ${{ github.event.inputs.environment }}
+      environment: if [[ ${{ github.event_name == 'workflow_dispatch' }} == true ]]; then
+        environment=${{ github.event.inputs.environment }}; 
+        else 
+          environment=dev; 
+        fi
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
