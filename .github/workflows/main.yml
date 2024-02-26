@@ -1,10 +1,6 @@
 name: github-actions
 
 on:
-  push:
-    branches:
-      - '*'
-
   # This is used to enable a workflow to be triggered manually.
   workflow_dispatch:
     inputs:
@@ -15,8 +11,7 @@ on:
         default: dev
         options:
           - dev
-          - prod               
-  pull_request:     
+          - prod                
 
 permissions:
   issues: write
@@ -28,7 +23,7 @@ jobs:
   terraform-plan:
     uses: ./.github/workflows/plan.yml
     with:
-      environment: 'dev'
+      environment: ${{ github.event.inputs.environment }}
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}

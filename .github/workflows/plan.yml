@@ -8,11 +8,11 @@ on:
   # This is used to indicate that a workflow 
   # can be called by another workflow.
   workflow_call:
-    # inputs:
-    #   environment:
-    #     description: 'The environment to deploy to'
-    #     required: true
-    #     type: string
+    inputs:
+      environment:
+        description: 'The environment to deploy to'
+        required: true
+        type: string
 
     secrets:
       ARM_CLIENT_ID:
@@ -38,8 +38,7 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     env: 
-      # environment: ${{ github.event.inputs.environment }}
-      environment: 'dev'
+      environment: ${{ github.event.inputs.environment }}
 
     steps:
       # Checkout the repository to the GitHub Actions runner
@@ -70,8 +69,7 @@ jobs:
           STORAGE_ACCOUNT: ${{ env.STORAGE_ACCOUNT }}
           CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
           # environment: ${{ inputs.environment }}
-          # environment: ${{ github.event.inputs.environment }}
-          environment: 'dev'
+          environment: ${{ github.event.inputs.environment }}
         run: |
           terraform init \
             -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
@@ -87,8 +85,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           # environment: ${{ inputs.environment }}
-          # environment: ${{ github.event.inputs.environment }}
-          environment: 'dev'
+          environment: ${{ github.event.inputs.environment }}
           
         run: |
           terraform plan \
