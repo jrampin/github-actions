@@ -1,4 +1,4 @@
-name: My Starter Workflow
+name: github-actions
 
 on:
   workflow_dispatch:

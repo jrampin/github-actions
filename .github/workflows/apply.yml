@@ -1,4 +1,4 @@
-name: Terraform Plan
+name: terraform-apply
 
 on:
   workflow_call:
@@ -33,14 +33,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Download saved plan from artifacts  
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v3
-        with:
-          name: tfplan
-          path: tfplan
-      - run: zip -r tfplan.zip tfplan/
-
       # Install the selected version of Terraform CLI 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -73,14 +65,6 @@ jobs:
             -backend-config="resource_group_name=$RESOURCE_GROUP" \
             -backend-config="key=$environment/terraform.tfstate"
 
-      # # Download saved plan from artifacts  
-      # - name: Download Terraform Plan
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: tfplan
-      #     path: tfplan
-      # - run: zip -r tfplan.zip tfplan/
-
       # Run a terraform apply
       - name: Terraform Apply
         id: apply
@@ -88,8 +72,22 @@ jobs:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          # environment: ${{ inputs.environment }}
+          environment: ${{ github.event.inputs.environment }}
+          
         run: |
-          ls -lah
           terraform apply \
-            -auto-approve \
-            tfplan
+            -var-file=environments/$environment.tfvars -auto-approve
+        continue-on-error: false
+
+      # # Run a terraform apply
+      # - name: Terraform Apply
+      #   id: apply
+      #   env:
+      #     ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      #     ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      #     ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      #   run: |
+      #     terraform apply \
+      #       -auto-approve \
+      #       tfplan
