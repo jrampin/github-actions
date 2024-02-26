@@ -1,22 +1,22 @@
 name: github-actions
 
 on:
-  push:
-    branches:
-      - '*'
+  # push:
+  #   branches:
+  #     - '*'
 
   # This is used to enable a workflow to be triggered manually.
   workflow_dispatch:
     inputs:
       environment:
         description: 'Specifies the GitHub deployment environment.'
-        required: false
+        required: true
         type: choice
         default: dev
         options:
           - dev
           - prod          
-  pull_request:
+  # pull_request:
 
 # env:
 #   # TF_LOG: INFO
