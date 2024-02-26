@@ -1,6 +1,7 @@
 name: github-actions
 
 on:
+  # This is used to enable a workflow to be triggered manually.
   workflow_dispatch:
     inputs:
       environment:
@@ -10,14 +11,7 @@ on:
         default: dev
         options:
           - dev
-          - prod
-
-# env:
-#   # TF_LOG: INFO
-#   TF_INPUT: false
-#   RESOURCE_GROUP: 'rg-terraform'
-#   STORAGE_ACCOUNT: 'stterraformjr'
-#   CONTAINER_NAME: 'tfstate'
+          - prod                
 
 permissions:
   issues: write
@@ -37,6 +31,10 @@ jobs:
 
   terraform-apply:
     uses: ./.github/workflows/apply.yml
+
+    # if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch'
+    
     needs: terraform-plan
     with:
       environment: ${{ github.event.inputs.environment }}
