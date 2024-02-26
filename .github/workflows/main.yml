@@ -16,14 +16,8 @@ on:
         options:
           - dev
           - prod     
+          
   pull_request:     
-
-# env:
-#   # TF_LOG: INFO
-#   TF_INPUT: false
-#   RESOURCE_GROUP: 'rg-terraform'
-#   STORAGE_ACCOUNT: 'stterraformjr'
-#   CONTAINER_NAME: 'tfstate'
 
 permissions:
   issues: write
@@ -34,9 +28,6 @@ permissions:
 jobs:
   terraform-plan:
     uses: ./.github/workflows/plan.yml
-
-    if: github.event_name != 'workflow_dispatch'
-
     with:
       environment: 'dev'
     secrets:
