@@ -10,13 +10,12 @@ on:
     inputs:
       environment:
         description: 'Specifies the GitHub deployment environment.'
-        required: false
+        required: true
         type: choice
         default: dev
         options:
           - dev
           - prod          
-  pull_request:
 
 # env:
 #   # TF_LOG: INFO
@@ -34,14 +33,11 @@ permissions:
 jobs:
   terraform-plan:
     uses: ./.github/workflows/plan.yml
-    with:
-      # environment: ${{ github.event.inputs.environment }}
 
-      environment: if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-        ${{ github.event.inputs.environment }}; 
-        else 
-          dev; 
-        fi
+    if: github.event_name != 'workflow_dispatch'
+    
+    with:
+      environment: 'dev'
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
@@ -49,15 +45,13 @@ jobs:
 
   terraform-apply:
     uses: ./.github/workflows/apply.yml
-    if: github.ref == 'refs/heads/main'
+
+    # if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch'
+    
     needs: terraform-plan
     with:
-      # environment: ${{ github.event.inputs.environment }}
-      environment: if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-        ${{ github.event.inputs.environment }}; 
-        else 
-          dev; 
-        fi
+      environment: ${{ github.event.inputs.environment }}
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
