@@ -15,7 +15,8 @@ on:
         default: dev
         options:
           - dev
-          - prod          
+          - prod     
+  pull_request:     
 
 # env:
 #   # TF_LOG: INFO
@@ -35,7 +36,7 @@ jobs:
     uses: ./.github/workflows/plan.yml
 
     if: github.event_name != 'workflow_dispatch'
-    
+
     with:
       environment: 'dev'
     secrets:
