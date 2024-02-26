@@ -1,9 +1,9 @@
 name: terraform-apply
 
 on:
-  push:
-    branches:
-    - main
+  # push:
+  #   branches:
+  #   - main
 
   # This is used to indicate that a workflow 
   # can be called by another workflow.
