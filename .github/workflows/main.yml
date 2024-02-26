@@ -16,7 +16,7 @@ on:
         options:
           - dev
           - prod          
-  pull_request:
+  # pull_request:
 
 # env:
 #   # TF_LOG: INFO
@@ -37,10 +37,10 @@ jobs:
     with:
       # environment: ${{ github.event.inputs.environment }}
 
-      environment: if [[ ${{ github.event_name == 'workflow_dispatch' }} == true ]]; then
-        environment=${{ github.event.inputs.environment }}; 
+      environment: if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+        ${{ github.event.inputs.environment }}; 
         else 
-          environment=dev; 
+          dev; 
         fi
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -52,10 +52,10 @@ jobs:
     needs: terraform-plan
     with:
       # environment: ${{ github.event.inputs.environment }}
-      environment: if [[ ${{ github.event_name == 'workflow_dispatch' }} == true ]]; then
-        environment=${{ github.event.inputs.environment }}; 
+      environment: if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+        ${{ github.event.inputs.environment }}; 
         else 
-          environment=dev; 
+          dev; 
         fi
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
