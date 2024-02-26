@@ -15,8 +15,7 @@ on:
         default: dev
         options:
           - dev
-          - prod     
-          
+          - prod               
   pull_request:     
 
 permissions:
