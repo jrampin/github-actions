@@ -2,6 +2,12 @@ name: terraform-apply
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        description: 'The environment to deploy to'
+        required: true
+        type: string
+
     secrets:
       ARM_CLIENT_ID:
         required: true

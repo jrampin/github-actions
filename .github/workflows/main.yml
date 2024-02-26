@@ -28,6 +28,8 @@ permissions:
 jobs:
   terraform-plan:
     uses: ./.github/workflows/plan.yml
+    with:
+      environment: ${{ github.event.inputs.environment }}
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
@@ -36,6 +38,8 @@ jobs:
   terraform-apply:
     uses: ./.github/workflows/apply.yml
     needs: terraform-plan
+    with:
+      environment: ${{ github.event.inputs.environment }}
     secrets:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
