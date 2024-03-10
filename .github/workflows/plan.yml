@@ -38,7 +38,8 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     env: 
-      environment: ${{ github.event.inputs.environment }}
+      # environment: ${{ github.event.inputs.environment }}
+      environment: ${{ inputs.environment }}
 
     steps:
       # Checkout the repository to the GitHub Actions runner
