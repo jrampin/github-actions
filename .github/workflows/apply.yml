@@ -91,15 +91,3 @@ jobs:
           terraform apply \
             -var-file=environments/$environment.tfvars -auto-approve
         continue-on-error: false
-
-      # # Run a terraform apply
-      # - name: Terraform Apply
-      #   id: apply
-      #   env:
-      #     ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-      #     ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      #     ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      #   run: |
-      #     terraform apply \
-      #       -auto-approve \
-      #       tfplan

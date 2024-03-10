@@ -30,11 +30,7 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
   terraform-apply:
-    uses: ./.github/workflows/apply.yml
-
-    # if: github.ref == 'refs/heads/main'
-    if: github.event_name == 'workflow_dispatch'
-    
+    uses: ./.github/workflows/apply.yml   
     needs: terraform-plan
     with:
       environment: ${{ github.event.inputs.environment }}

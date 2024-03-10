@@ -91,10 +91,3 @@ jobs:
           terraform plan \
             -var-file=environments/$environment.tfvars
         continue-on-error: false
-
-      # # Save plan to artifacts  
-      # - name: Publish Terraform Plan
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: tfplan
-      #     path: tfplan
