@@ -68,8 +68,8 @@ jobs:
           RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }}
           STORAGE_ACCOUNT: ${{ env.STORAGE_ACCOUNT }}
           CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
-          # environment: ${{ inputs.environment }}
-          environment: ${{ github.event.inputs.environment }}
+          environment: ${{ inputs.environment }}
+          # environment: ${{ github.event.inputs.environment }}
         run: |
           terraform init \
             -backend-config="storage_account_name=$STORAGE_ACCOUNT" \
@@ -84,8 +84,8 @@ jobs:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          # environment: ${{ inputs.environment }}
-          environment: ${{ github.event.inputs.environment }}
+          environment: ${{ inputs.environment }}
+          # environment: ${{ github.event.inputs.environment }}
           
         run: |
           terraform plan \
